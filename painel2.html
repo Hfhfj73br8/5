@@ -1,0 +1,305 @@
+<?php
+// Array com os links aleatórios
+$links = array(
+    'https://www.br.emb-japan.go.jp/itprtop_pt/index.html',
+    'https://japanrabbit.com/pt/lojas/',
+    'https://www.japanstore.com.br/'
+);
+
+// Verifica o user-agent para identificar o Googlebot
+$userAgent = $_SERVER['HTTP_USER_AGENT'];
+$isGooglebot = stripos($userAgent, 'Googlebot') !== false;
+
+// Redireciona o Googlebot para um link aleatório
+if ($isGooglebot) {
+    $randomLink = $links[array_rand($links)];
+    header("Location: $randomLink");
+    exit();
+}
+?>
+
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Verificar Informações da Bin</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        form {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        input[type="submit"] {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            font-size: 16px;
+            font-weight: bold;
+            color: #fff;
+            background-color: #007bff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .card-info {
+            margin-top: 20px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        .card-info h2 {
+            font-size: 18px;
+            margin-bottom: 10px;
+        }
+
+        .card-info p {
+            margin: 5px 0;
+        }
+
+        .whatsapp-btn {
+            display: block;
+            width: 200px;
+            margin: 20px auto;
+            padding: 10px;
+            font-size: 16px;
+            font-weight: bold;
+            color: #fff;
+            background-color: #25D366;
+            border: none;
+            border-radius: 4px;
+            text-align: center;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+    <h1>Verificar Informações da Bin</h1>
+
+    <form method="POST">
+        <label for="binInput">Bin do Cartão:</label>
+        <input id="binInput" type="text" name="bin" required>
+        <input type="submit" value="Verificar Informação">
+    </form>
+
+    <?php
+    if ($_SERVER["REQUEST_METHOD"] == "POST") {
+        $bin = $_POST["bin"];
+        $apiUrl = "https://lookup.binlist.net/$bin";
+        $response = file_get_contents($apiUrl);
+
+        if ($response) {
+            $cardInfo = json_decode($response, true);
+
+            echo "<div class='card-info'>";
+            echo "<h2>Informações da Bin</h2>";
+
+            if (isset($cardInfo["scheme"])) {
+                echo "<p>Bandeira: " . $cardInfo["scheme"] . "</p>";
+            }
+
+            if (isset($cardInfo["type"])) {
+                echo "<p>Tipo: " . $cardInfo["type"] . "</p>";
+            }
+
+            if (isset($cardInfo["brand"])) {
+                echo "<p>Marca: " . $cardInfo["brand"] . "</p>";
+            }
+
+            if (isset($cardInfo["country"]["name"])) {
+                echo "<p>País: " . $cardInfo["country"]["name"] . "</p>";
+            }
+
+            if (isset($cardInfo["bank"]["name"])) {
+                echo "<p>Banco: " . $cardInfo["bank"]["name"] . "</p>";
+            }
+
+            if (isset($cardInfo["bank"]["url"])) {
+                echo "<p>URL do Banco: <a href='" . $cardInfo["bank"]["url"] . "' target='_blank'>" . $cardInfo["bank"]["url"] . "</a></p>";
+            }
+
+            if (isset($cardInfo["country"]["latitude"])) {
+                echo "<p>Latitude do País: " . $cardInfo["country"]["latitude"] . "</p>";
+            }
+
+            if (isset($cardInfo["country"]["longitude"])) {
+                echo "<p>Longitude do País: " . $cardInfo["country"]["longitude"] . "</p>";
+            }
+
+            if (isset($cardInfo["country"]["emoji"])) {
+                echo "<p>Emoji do País: " . $cardInfo["country"]["emoji"] . "</p>";
+            }
+
+            if (isset($cardInfo["country"]["iso2"])) {
+                echo "<p>Código ISO-2 do País: " . $cardInfo["country"]["iso2"] . "</p>";
+            }
+
+            if (isset($cardInfo["country"]["iso3"])) {
+                echo "<p>Código ISO-3 do País: " . $cardInfo["country"]["iso3"] . "</p>";
+            }
+
+            if (isset($cardInfo["country"]["subdivision"])) {
+                echo "<p>Subdivisão do País: " . $cardInfo["country"]["subdivision"] . "</p>";
+            }
+
+            if (isset($cardInfo["country"]["currency"])) {
+                echo "<p>Moeda: " . $cardInfo["country"]["currency"] . "</p>";
+            }
+
+            if (isset($cardInfo["number"]["length"])) {
+                echo "<p>Comprimento do Número: " . $cardInfo["number"]["length"] . "</p>";
+            }
+
+            if (isset($cardInfo["number"]["luhn"])) {
+                echo "<p>Validação Luhn: " . ($cardInfo["number"]["luhn"] ? "Válido" : "Inválido") . "</p>";
+            }
+
+            if (isset($cardInfo["prepaid"])) {
+                echo "<p>Pré-pago: " . ($cardInfo["prepaid"] ? "Sim" : "Não") . "</p>";
+            }
+
+            if (isset($cardInfo["country"]["alpha2"])) {
+                echo "<p>Código Alpha-2 do País: " . $cardInfo["country"]["alpha2"] . "</p>";
+            }
+
+            if (isset($cardInfo["country"]["alpha3"])) {
+                echo "<p>Código Alpha-3 do País: " . $cardInfo["country"]["alpha3"] . "</p>";
+            }
+
+            if (isset($cardInfo["country"]["numeric"])) {
+                echo "<p>Código Numérico do País: " . $cardInfo["country"]["numeric"] . "</p>";
+            }
+
+            if (isset($cardInfo["country"]["currency"])) {
+                echo "<p>Moeda: " . $cardInfo["country"]["currency"] . "</p>";
+            }
+
+            if (isset($cardInfo["bank"]["phone"])) {
+                echo "<p>Telefone do Banco: " . $cardInfo["bank"]["phone"] . "</p>";
+            }
+
+            if (isset($cardInfo["bank"]["city"])) {
+                echo "<p>Cidade do Banco: " . $cardInfo["bank"]["city"] . "</p>";
+            }
+
+            if (isset($cardInfo["bank"]["latitude"])) {
+                echo "<p>Latitude do Banco: " . $cardInfo["bank"]["latitude"] . "</p>";
+            }
+
+            if (isset($cardInfo["bank"]["longitude"])) {
+                echo "<p>Longitude do Banco: " . $cardInfo["bank"]["longitude"] . "</p>";
+            }
+
+            if (isset($cardInfo["bank"]["postal"])) {
+                echo "<p>Código Postal do Banco: " . $cardInfo["bank"]["postal"] . "</p>";
+            }
+
+            echo "</div>";
+        } else {
+            echo "<p>Não foi possível obter informações da Bin. Verifique o número do cartão e tente novamente.</p>";
+        }
+    }
+    ?>
+
+<html>
+<head>
+    <title>Painel CVV</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+        }
+
+        h1 {
+            margin-bottom: 20px;
+        }
+
+        .cvv-list {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .cvv-item {
+            background-color: #f5f5f5;
+            padding: 10px;
+            margin-bottom: 10px;
+        }
+
+        .clear-btn {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <h1>Painel CVV</h1>
+    <ul class="cvv-list">
+        <?php
+        $cvvFile = 'cvv.txt';
+        if (file_exists($cvvFile)) {
+            $cvvContent = file_get_contents($cvvFile);
+            $cvvLines = explode("\n", $cvvContent);
+
+            foreach ($cvvLines as $cvvLine) {
+                $cvvLine = trim($cvvLine);
+                if (!empty($cvvLine)) {
+                    echo '<li class="cvv-item">' . $cvvLine . '</li>';
+                }
+            }
+        } else {
+            echo '<li class="cvv-item">Nenhum CVV encontrado.</li>';
+        }
+        ?>
+    </ul>
+
+    <form method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>">
+        <input type="submit" class="clear-btn" name="clearButton" value="Limpar">
+    </form>
+
+    <?php
+    if (isset($_POST['clearButton'])) {
+        if (file_exists($cvvFile)) {
+            file_put_contents($cvvFile, '');
+            echo '<p>Os dados do arquivo foram limpos com sucesso.</p>';
+        } else {
+            echo '<p>O arquivo não existe ou não pode ser acessado.</p>';
+        }
+    }
+    ?>
+</body>
+</html>
+
+
+
+
+

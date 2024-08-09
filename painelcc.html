@@ -1,0 +1,23 @@
+
+<?php
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    $valor = $_POST["valorInput"];
+    file_put_contents('rs.txt', $valor);
+}
+?>
+
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Painel de Controle</title>
+</head>
+<body>
+    <form method="POST">
+        <label for="valorInput">Valor do Produto:</label>
+        <input id="valorInput" type="text" name="valorInput" required>
+        <button type="submit">Atualizar</button>
+    </form>
+</body>
+</html>
+Ao acessar painel.php, você terá um
